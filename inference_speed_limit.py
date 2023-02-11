@@ -10,15 +10,19 @@ import mss
 loaded_model = load_model('data/model.h5')
 
 
-def predictions(image):
-    image = cv2.resize(image, (224, 224))
-    image = np.expand_dims(image, axis=0)
-    prediction = loaded_model.predict(image)
-    return prediction
+def cur_speed_limit(image):
+    ROI = image[850:950, 450:650]
+    speed_lim = text_extraction(ROI)
+    if len(speed_lim) < 1:
+        return 0
+    speed_lim = speed_lim.strip()
+    speed_lim = speed_lim.encode('ascii', 'ignore').decode('ascii')
+    speed_lim = get_digits(speed_lim)
+    return speed_lim
 
 
 def control(prediction, current):
-    if abs(prediction - current) > 10:
+    if abs(prediction - current) > 15:
         if prediction > current:
             print('w')
             PressKey(W)
@@ -26,11 +30,15 @@ def control(prediction, current):
             time.sleep(2)
             ReleaseKey(W)
         if prediction < current:
-            print('no change')
+            print('s')
+            PressKey(S)
             ReleaseKey(W)
+            time.sleep(2)
             ReleaseKey(S)
-
-
+    else:
+        print('no change')
+        ReleaseKey(W)
+        ReleaseKey(S)
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 def get_speed(image):
@@ -85,13 +93,13 @@ def main():
             screen = cv2.cvtColor(screen, cv2.COLOR_RGBA2RGB)
             imS = cv2.resize(screen, (960, 540))  # Resize image
             cur_speed = get_speed(screen)
-            prediction = predictions(screen)[0][0] * 100
+            speed_limit = cur_speed_limit(screen)
             print("current speed: ", cur_speed)
-            print("prediction: ", prediction)
-            # run controls every 5 seconds
+            print("prediction: ", speed_limit)
+            # run controls every 5 secondsw
             if time.time() - last_time > 0.1:
                 last_time = time.time()
-                control(prediction, cur_speed)
+                control(speed_limit, cur_speed)
             cv2.imshow('window', imS)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 cv2.destroyAllWindows()
