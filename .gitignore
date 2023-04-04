@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 *.png
 *.h5
+*.RAMU-DESKTOP
+*.data-00000-of-00001
+*.npy
