@@ -5,15 +5,15 @@ from utils.getkeys import key_check
 
 
 key_map = {
-    'W': [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    'S': [0, 1, 0, 0, 0, 0, 0, 0, 0],
-    'A': [0, 0, 1, 0, 0, 0, 0, 0, 0],
-    'D': [0, 0, 0, 1, 0, 0, 0, 0, 0],
-    'WS': [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    'WD': [0, 0, 0, 0, 0, 1, 0, 0, 0],
-    'SA': [0, 0, 0, 0, 0, 0, 1, 0, 0],
-    'SD': [0, 0, 0, 0, 0, 0, 0, 1, 0],
-    'NK': [0, 0, 0, 0, 0, 0, 0, 0, 1],
+    'W': [1, 0],
+    # 'S': [0, 1, 0, 0, 0, 0, 0, 0, 0],
+    # 'A': [0, 0, 1, 0, 0, 0, 0, 0, 0],
+    # 'D': [0, 0, 0, 1, 0, 0, 0, 0, 0],
+    # 'WS': [0, 0, 0, 0, 1, 0, 0, 0, 0],
+    # 'WD': [0, 0, 0, 0, 0, 1, 0, 0, 0],
+    # 'SA': [0, 0, 0, 0, 0, 0, 1, 0, 0],
+    # 'SD': [0, 0, 0, 0, 0, 0, 0, 1, 0],
+    'NK': [0, 1],
     # 'default': [0, 0, 0, 0, 0, 0, 0, 0, 1],
 }
 
@@ -40,7 +40,7 @@ def keys_to_output(keys):
 
 def main(file_name):
     training_data = []
-    for i in list(range(4))[::-1]:
+    for i in list(range(3))[::-1]:
         print(i + 1)
         time.sleep(1)
     paused = False
@@ -55,6 +55,7 @@ def main(file_name):
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
             keys = key_check()
             output = keys_to_output(keys)
+            print(output)
             training_data.append([screen,output])
         keys = key_check()
         if 'T' in keys:

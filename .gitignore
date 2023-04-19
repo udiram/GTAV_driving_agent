@@ -132,3 +132,4 @@ dmypy.json
 *.RAMU-DESKTOP
 *.data-00000-of-00001
 *.npy
+nopush/vizualizer.py
