@@ -1,12 +1,12 @@
 import cv2, time, random
 import numpy as np
-from utils.screen_grab import grab_screen
-from utils.getkeys import key_check
+from v2.utils.screen_grab import grab_screen
+from v2.utils.getkeys import key_check
 from collections import deque, Counter
-from models.models import inception_v3 as googlenet
-from utils.direct_keys import PressKey, ReleaseKey, W, A, S, D
+from v2.models.models import inception_v3 as googlenet
+from v2.utils.direct_keys import PressKey, ReleaseKey, W, A, S, D
 from statistics import mode, mean
-from utils.motion_detection import motion_detection
+from v2.utils.motion_detection import motion_detection
 
 GAME_WIDTH = 1920
 GAME_HEIGHT = 1080
@@ -29,18 +29,15 @@ choice_hist = deque([], maxlen = hl_hist)
 t_time = 0.25
 
 model = googlenet(WIDTH, HEIGHT, 3, LR, output = 2)
-MODEL_NAME = 'googlenet_selfdrivev2'
+MODEL_NAME = 'googlenet_selfdrivev1_fcw'
 model.load(MODEL_NAME)
 
 print('We have loaded a previous model!!!!')
 
-def accel():
-    PressKey(W)
+def FCW():
+    PressKey(S)
     time.sleep(0.1)
-    ReleaseKey(W)
-
-def decel():
-    ReleaseKey(W)
+    ReleaseKey(S)
 
 def main():
     last_time = time.time()
@@ -56,6 +53,7 @@ def main():
     prev = cv2.resize(screen, (WIDTH,HEIGHT))
     t_minus, t_now, t_plus = prev, prev, prev
     color_select = (0,0,0)
+    fcw = False
     while(True):
         if not paused:
 
@@ -65,6 +63,11 @@ def main():
             last_time = time.time()
             screen = cv2.resize(screen, (WIDTH,HEIGHT))
             image = cv2.rectangle(screen,(0,0), (WIDTH, HEIGHT), color_select, 10)
+            if fcw:
+                cv2.putText(image, 'FCW', (WIDTH//2 - 50, HEIGHT//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2, cv2.LINE_AA)
+                cv2.imwrite('fcw1.png', image)
+
+
             cv2.imshow('window1', image)
             # cv2.imshow('window', screen)
             if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -79,17 +82,22 @@ def main():
 
             prediction = model.predict([screen.reshape(WIDTH,HEIGHT, 3)])[0]
             # prediction = np.array(prediction) * np.array([4.5, 0.1, 0.1, 0.1, 1.8, 1.8, 0.5, 0.5, 0.2])
-
+            #turn down fcw sensitivity
+            prediction = np.array(prediction) * np.array([0.1, 1])
             model_choice = np.argmax(prediction)
             print(model_choice, prediction)
             if model_choice == 0:
-                accel()
-                choice_picked = 'accel'
-                color_select = (0,255,0)
-            elif model_choice == 1:
-                decel()
-                choice_picked = 'no key'
+                for i in range(5):
+                    FCW()
+                choice_picked = 'FCW'
                 color_select = (0,0,255)
+                fcw = True
+                time.sleep(1)
+            elif model_choice == 1:
+                ReleaseKey(S)
+                choice_picked = 'No FCW'
+                color_select = (0,255,0)
+                fcw = False
 
             motion_log.append(delta_count_last)
             motion_avg = round(mean(motion_log), 3)

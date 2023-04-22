@@ -1,25 +1,17 @@
 import os, time, cv2
 import numpy as np
-from utils.screen_grab import grab_screen
-from utils.getkeys import key_check
+from v2.utils.screen_grab import grab_screen
+from v2.utils.getkeys import key_check
 
 
 key_map = {
-    'W': [1, 0],
-    # 'S': [0, 1, 0, 0, 0, 0, 0, 0, 0],
-    # 'A': [0, 0, 1, 0, 0, 0, 0, 0, 0],
-    # 'D': [0, 0, 0, 1, 0, 0, 0, 0, 0],
-    # 'WS': [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    # 'WD': [0, 0, 0, 0, 0, 1, 0, 0, 0],
-    # 'SA': [0, 0, 0, 0, 0, 0, 1, 0, 0],
-    # 'SD': [0, 0, 0, 0, 0, 0, 0, 1, 0],
-    'NK': [0, 1],
-    # 'default': [0, 0, 0, 0, 0, 0, 0, 0, 1],
+    'SS': [1, 0],
+    'no collision': [0, 1]
 }
 
 
 while True:
-    file_name = 'data/training_data_dummy.npy'
+    file_name = 'fcw_data/training_data_fcw.npy'
     if os.path.isfile(file_name):
         print('File exists, moving along')
     else:
@@ -35,7 +27,7 @@ def keys_to_output(keys):
     print(''.join(keys))
     if ''.join(keys) in key_map:
         return key_map[''.join(keys)]
-    return key_map['NK']
+    return key_map['no collision']
 
 
 def main(file_name):
@@ -69,6 +61,6 @@ def main(file_name):
                 time.sleep(1)
                 np.save(file_name, np.array(training_data, dtype=object))
                 print('SAVED')
-                file_name = 'data/training_data_dummy.npy'
+                file_name = 'fcw_data/training_data_fcw.npy'
 if __name__ == "__main__":
     main(file_name)

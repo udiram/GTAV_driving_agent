@@ -1,0 +1,2 @@
+model_checkpoint_path: "C:\\Users\\sathy\\OneDrive\\Documents\\GitHub\\GTAV_driving_agent\\v2\\lateral\\googlenet_selfdrivev1_lateral"
+all_model_checkpoint_paths: "C:\\Users\\sathy\\OneDrive\\Documents\\GitHub\\GTAV_driving_agent\\v2\\lateral\\googlenet_selfdrivev1_lateral"

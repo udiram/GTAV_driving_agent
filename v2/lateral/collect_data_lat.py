@@ -1,25 +1,22 @@
 import os, time, cv2
 import numpy as np
-from utils.screen_grab import grab_screen
-from utils.getkeys import key_check
+from v2.utils.screen_grab import grab_screen
+from v2.utils.getkeys import key_check
 
 
 key_map = {
-    'W': [1, 0],
-    # 'S': [0, 1, 0, 0, 0, 0, 0, 0, 0],
-    # 'A': [0, 0, 1, 0, 0, 0, 0, 0, 0],
-    # 'D': [0, 0, 0, 1, 0, 0, 0, 0, 0],
-    # 'WS': [0, 0, 0, 0, 1, 0, 0, 0, 0],
-    # 'WD': [0, 0, 0, 0, 0, 1, 0, 0, 0],
-    # 'SA': [0, 0, 0, 0, 0, 0, 1, 0, 0],
-    # 'SD': [0, 0, 0, 0, 0, 0, 0, 1, 0],
-    'NK': [0, 1],
-    # 'default': [0, 0, 0, 0, 0, 0, 0, 0, 1],
+    'AA':  [1, 0, 0],
+    'AWA': [1, 0, 0],
+    'ASA': [1, 0, 0],
+    'WD': [0, 1, 0],
+    'SD': [0, 1, 0],
+    'D':  [0, 1, 0],
+    'NK': [0, 0, 1],
 }
 
 
 while True:
-    file_name = 'data/training_data_dummy.npy'
+    file_name = 'lat_data/training_data_lat.npy'
     if os.path.isfile(file_name):
         print('File exists, moving along')
     else:
@@ -69,6 +66,6 @@ def main(file_name):
                 time.sleep(1)
                 np.save(file_name, np.array(training_data, dtype=object))
                 print('SAVED')
-                file_name = 'data/training_data_dummy.npy'
+                file_name = 'lat_data/training_data_lat.npy'
 if __name__ == "__main__":
     main(file_name)
